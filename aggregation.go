@@ -103,7 +103,7 @@ func (a *Aggregation) Lookup(lookup interface{}) *Aggregation {
 	return a
 }
 
-func (a *Aggregation) One(result interface{}) error {
+func (a *Aggregation) FindOne(result interface{}) error {
 	cur, err := a.c.col.Aggregate(a.ctx, a.pipeline)
 	if err != nil {
 		return handleError(err)
@@ -115,7 +115,7 @@ func (a *Aggregation) One(result interface{}) error {
 	return err
 }
 
-func (a *Aggregation) List(result interface{}) error {
+func (a *Aggregation) Find(result interface{}) error {
 	cur, err := a.c.col.Aggregate(a.ctx, a.pipeline)
 	if err != nil {
 		return handleError(err)

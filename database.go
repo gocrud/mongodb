@@ -1,6 +1,9 @@
 package mongodb
 
-import "go.mongodb.org/mongo-driver/mongo"
+import (
+	"context"
+	"go.mongodb.org/mongo-driver/mongo"
+)
 
 type Database struct {
 	name string
@@ -14,4 +17,8 @@ func (d *Database) Collection(name string) *Collection {
 		col:  d.db.Collection(name),
 		db:   d,
 	}
+}
+
+func (d *Database) Drop() error {
+	return d.db.Drop(context.Background())
 }
