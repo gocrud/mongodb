@@ -20,12 +20,12 @@ func (q *Query) Context(ctx context.Context) *Query {
 	return q
 }
 
-func (q *Query) FindOne(data any) error {
+func (q *Query) One(data any) error {
 	err := q.c.col.FindOne(q.ctx, q.filter).Decode(data)
 	return handleError(err)
 }
 
-func (q *Query) Find(data any) error {
+func (q *Query) List(data any) error {
 	cursor, err := q.c.col.Find(q.ctx, q.filter)
 	if err != nil {
 		return handleError(err)

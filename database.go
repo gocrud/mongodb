@@ -2,13 +2,14 @@ package mongodb
 
 import (
 	"context"
+
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
 type Database struct {
 	name string
 	db   *mongo.Database
-	mg   *MongoDB
+	mg   *Client
 }
 
 func (d *Database) Collection(name string) *Collection {

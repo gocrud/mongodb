@@ -2,6 +2,7 @@ package mongodb
 
 import (
 	"context"
+
 	"go.mongodb.org/mongo-driver/bson"
 )
 
@@ -9,6 +10,11 @@ type Aggregation struct {
 	c        *Collection
 	ctx      context.Context
 	pipeline []interface{}
+}
+
+func (a *Aggregation) Context(ctx context.Context) *Aggregation {
+	a.ctx = ctx
+	return a
 }
 
 // Match 过滤
@@ -72,10 +78,17 @@ func (a *Aggregation) Count(field string) *Aggregation {
 	return a
 }
 
-type UnwindOption struct {
-	Path                       string `json:"path"`
-	IncludeArrayIndex          bool   `json:"includeArrayIndex"`
-	PreserveNullAndEmptyArrays bool   `json:"preserveNullAndEmptyArrays"`
+func UnwindOption(path string, includeArrayIndex string, preserveNullAndEmptyArrays bool) bson.M {
+	opts := bson.M{
+		"preserveNullAndEmptyArrays": preserveNullAndEmptyArrays,
+	}
+	if path != "" {
+		opts["path"] = path
+	}
+	if includeArrayIndex != "" {
+		opts["includeArrayIndex"] = includeArrayIndex
+	}
+	return opts
 }
 
 // Unwind
@@ -87,11 +100,20 @@ func (a *Aggregation) Unwind(option interface{}) *Aggregation {
 	return a
 }
 
+// ReplaceRoot
+//
+//	{ $replaceRoot: { newRoot: <expression> } }
+func (a *Aggregation) ReplaceRoot(root interface{}) *Aggregation {
+	stage := bson.D{{"$replaceRoot", root}}
+	a.pipeline = append(a.pipeline, stage)
+	return a
+}
+
 type LookupOption struct {
-	From         string `json:"from"`
-	LocalField   string `json:"localField"`
-	ForeignField string `json:"foreignField"`
-	As           string `json:"as"`
+	From         string `json:"from" bson:"from"`
+	LocalField   string `json:"localField" bson:"localField"`
+	ForeignField string `json:"foreignField" bson:"foreignField"`
+	As           string `json:"as" bson:"as"`
 }
 
 // Lookup
@@ -103,7 +125,7 @@ func (a *Aggregation) Lookup(lookup interface{}) *Aggregation {
 	return a
 }
 
-func (a *Aggregation) FindOne(result interface{}) error {
+func (a *Aggregation) One(result interface{}) error {
 	cur, err := a.c.col.Aggregate(a.ctx, a.pipeline)
 	if err != nil {
 		return handleError(err)
@@ -115,7 +137,7 @@ func (a *Aggregation) FindOne(result interface{}) error {
 	return err
 }
 
-func (a *Aggregation) Find(result interface{}) error {
+func (a *Aggregation) List(result interface{}) error {
 	cur, err := a.c.col.Aggregate(a.ctx, a.pipeline)
 	if err != nil {
 		return handleError(err)
