@@ -1,6 +1,6 @@
 module github.com/gocrud/mongodb
 
-go 1.21.0
+go 1.18.0
 
 require go.mongodb.org/mongo-driver v1.13.1
 
