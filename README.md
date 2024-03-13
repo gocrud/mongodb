@@ -35,5 +35,7 @@ err := users.Query().Filter(bson.M{"name": "test"}).FindMany(&dataArr)
 // 删除数据
 err := users.Query().Filter(bson.M{"name": "test"}).DeleteOne()
 err := users.Query().Filter(bson.M{"name": "test"}).DeleteMany()
+// 聚合查询
+err := 	users.Aggregate().Match(bson.M{"name": "test"}).FindMany(&result)
 ```
 
