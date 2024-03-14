@@ -22,8 +22,9 @@ func (c *Collection) Drop() error {
 
 func (c *Collection) Query() *Query {
 	return &Query{
-		c:   c,
-		ctx: context.Background(),
+		c:      c,
+		filter: make(map[string]interface{}),
+		ctx:    context.Background(),
 	}
 }
 
