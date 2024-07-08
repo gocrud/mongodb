@@ -17,6 +17,15 @@ func (a *Aggregation) Context(ctx context.Context) *Aggregation {
 	return a
 }
 
+func (a *Aggregation) Clone() *Aggregation {
+	aggs := Aggregation{
+		c:        a.c,
+		ctx:      a.ctx,
+		pipeline: a.pipeline,
+	}
+	return &aggs
+}
+
 // Match 过滤
 //
 //	{ $match: { <query> } }
