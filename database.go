@@ -23,3 +23,7 @@ func (d *Database) Collection(name string) *Collection {
 func (d *Database) Drop() error {
 	return d.db.Drop(context.Background())
 }
+
+func (d *Database) RawDatabase() *mongo.Database {
+	return d.db
+}
